@@ -66,7 +66,6 @@ const styles = {
     fontWeight: '500',
     transition: 'background-color 0.2s ease'
   },
-  // Add hover effects using onMouseOver/onMouseOut instead of CSS hover
   wrapper: {
     minHeight: '100vh',
     backgroundColor: '#F7F9FC',
@@ -97,6 +96,9 @@ const VideoPage = ({ videoUrl, title, onBack }) => {
         style={styles.video}
         controls
         src={videoUrl}
+        onError={(e) => {
+          console.error("Video loading error:", e);
+        }}
       />
       <button
         onClick={handlePractice}
@@ -153,15 +155,48 @@ const SongList = ({ songs, onSelectSong }) => {
 };
 
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [selectedSong, setSelectedSong] = useState(null);
-  
+  const [passwordAttempts, setPasswordAttempts] = useState(0);
+
+  const checkPassword = () => {
+    const password = prompt("Please enter the password:");
+    if (password === "yazzyb") {
+      setIsAuthenticated(true);
+    } else {
+      setPasswordAttempts(prev => prev + 1);
+      if (passwordAttempts >= 2) {
+        alert("Too many incorrect attempts. Please try again later.");
+        return;
+      }
+      alert("Incorrect password. Please try again.");
+    }
+  };
+
+  React.useEffect(() => {
+    if (!isAuthenticated) {
+      checkPassword();
+    }
+  }, []);
+
+  if (!isAuthenticated) {
+    return null;
+  }
+
+  const baseUrl = process.env.NODE_ENV === 'production' 
+    ? '/yazzy-sangeet-practice'
+    : '';
+
   const songs = [
-    { id: 1, title: 'Song 1', videoUrl: '/videos/song1.mp4' },
-    { id: 2, title: 'Song 2', videoUrl: '/videos/song2.mp4' },
-    { id: 3, title: 'Kini Kini', videoUrl: '/videos/song3.mp4' },
-    { id: 4, title: 'Kabhi Aar kabhi paar', videoUrl: '/videos/song4.mp4' },
-    { id: 5, title: 'Song 5', videoUrl: '/videos/song5.mp4' },
+    { id: 1, title: 'Song 1', videoUrl: `${baseUrl}/videos/song1.mp4` },
+    { id: 2, title: 'Song 2', videoUrl: `${baseUrl}/videos/song2.mp4` },
+    { id: 3, title: 'Song 3', videoUrl: `${baseUrl}/videos/song3.mp4` },
+    { id: 4, title: 'Song 4', videoUrl: `${baseUrl}/videos/song4.mp4` },
+    { id: 5, title: 'Song 5', videoUrl: `${baseUrl}/videos/song5.mp4` }
   ];
+
+  console.log("Environment:", process.env.NODE_ENV);
+  console.log("Base URL:", baseUrl);
 
   return (
     <div style={styles.wrapper}>
