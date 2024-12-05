@@ -190,8 +190,8 @@ const App = () => {
   const songs = [
     { id: 1, title: 'Song 1', videoUrl: `${baseUrl}/videos/song1.mp4` },
     { id: 2, title: 'Song 2', videoUrl: `${baseUrl}/videos/song2.mp4` },
-    { id: 3, title: 'Song 3', videoUrl: `${baseUrl}/videos/song3.mp4` },
-    { id: 4, title: 'Song 4', videoUrl: `${baseUrl}/videos/song4.mp4` },
+    { id: 3, title: 'Kini Kini', videoUrl: `${baseUrl}/videos/song3.mp4` },
+    { id: 4, title: 'Kabhi Aar Kabhi paar', videoUrl: `${baseUrl}/videos/song4.mp4` },
     { id: 5, title: 'Song 5', videoUrl: `${baseUrl}/videos/song5.mp4` }
   ];
 
