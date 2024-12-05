@@ -192,7 +192,7 @@ const App = () => {
     { id: 2, title: 'Song 2', videoUrl: `${baseUrl}/videos/song2.mp4` },
     { id: 3, title: 'Kini Kini', videoUrl: `${baseUrl}/videos/song3.mp4` },
     { id: 4, title: 'Kabhi Aar Kabhi paar', videoUrl: `${baseUrl}/videos/song4.mp4` },
-    { id: 5, title: 'Song 5', videoUrl: `${baseUrl}/videos/song5.mp4` }
+    { id: 5, title: 'Gudi Nal ishq mita', videoUrl: `${baseUrl}/videos/song5.mp4` }
   ];
 
   console.log("Environment:", process.env.NODE_ENV);
