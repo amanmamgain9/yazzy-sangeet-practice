@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/yazzy-sangeet-practice/static/css/main.0103c3d3.css",
-    "main.js": "/yazzy-sangeet-practice/static/js/main.272582a4.js",
+    "main.js": "/yazzy-sangeet-practice/static/js/main.50d10060.js",
     "static/js/453.0186f057.chunk.js": "/yazzy-sangeet-practice/static/js/453.0186f057.chunk.js",
     "index.html": "/yazzy-sangeet-practice/index.html",
     "main.0103c3d3.css.map": "/yazzy-sangeet-practice/static/css/main.0103c3d3.css.map",
-    "main.272582a4.js.map": "/yazzy-sangeet-practice/static/js/main.272582a4.js.map",
+    "main.50d10060.js.map": "/yazzy-sangeet-practice/static/js/main.50d10060.js.map",
     "453.0186f057.chunk.js.map": "/yazzy-sangeet-practice/static/js/453.0186f057.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.0103c3d3.css",
-    "static/js/main.272582a4.js"
+    "static/js/main.50d10060.js"
   ]
 }
