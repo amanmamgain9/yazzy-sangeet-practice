@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const styles = {
   container: {
@@ -41,6 +41,9 @@ const styles = {
     marginBottom: '20px',
     boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
   },
+  hiddenVideo: {
+    display: 'none'
+  },
   practiceButton: {
     width: '100%',
     padding: '15px',
@@ -52,7 +55,8 @@ const styles = {
     fontSize: '16px',
     fontWeight: '600',
     transition: 'background-color 0.2s ease',
-    boxShadow: '0 2px 4px rgba(52,152,219,0.3)'
+    boxShadow: '0 2px 4px rgba(52,152,219,0.3)',
+    marginBottom: '10px'
   },
   backButton: {
     padding: '12px 24px',
@@ -70,13 +74,26 @@ const styles = {
     minHeight: '100vh',
     backgroundColor: '#F7F9FC',
     padding: '20px'
+  },
+  toggleButton: {
+    padding: '12px 24px',
+    backgroundColor: '#2ECC71',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    marginBottom: '20px',
+    fontSize: '16px',
+    fontWeight: '500',
+    transition: 'background-color 0.2s ease'
   }
 };
 
 const VideoPage = ({ videoUrl, title, onBack }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const videoRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [hideVideo, setHideVideo] = useState(false);
+  const videoRef = useRef(null);
 
   const handlePractice = () => {
     if (videoRef.current) {
@@ -88,17 +105,27 @@ const VideoPage = ({ videoUrl, title, onBack }) => {
     }
   };
 
+  const toggleVideoVisibility = () => {
+    setHideVideo(!hideVideo);
+  };
+
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>{title}</h1>
+      <button
+        onClick={toggleVideoVisibility}
+        style={styles.toggleButton}
+        onMouseOver={(e) => e.target.style.backgroundColor = '#27AE60'}
+        onMouseOut={(e) => e.target.style.backgroundColor = '#2ECC71'}
+      >
+        {hideVideo ? 'Show Video' : 'Hide Video'}
+      </button>
       <video 
         ref={videoRef}
-        style={styles.video}
+        style={hideVideo ? styles.hiddenVideo : styles.video}
         controls
         src={videoUrl}
-        onError={(e) => {
-          console.error("Video loading error:", e);
-        }}
+        onError={(e) => console.error("Video loading error:", e)}
       />
       <button
         onClick={handlePractice}
@@ -159,6 +186,43 @@ const App = () => {
   const [selectedSong, setSelectedSong] = useState(null);
   const [passwordAttempts, setPasswordAttempts] = useState(0);
 
+  useEffect(() => {
+    const handleNavigation = () => {
+      const params = new URLSearchParams(window.location.search);
+      const songId = parseInt(params.get('song'));
+      if (songId) {
+        const song = songs.find(s => s.id === songId);
+        if (song) {
+          setSelectedSong(song);
+        }
+      } else {
+        setSelectedSong(null);
+      }
+    };
+
+    window.addEventListener('popstate', handleNavigation);
+    handleNavigation(); // Handle initial URL
+
+    return () => window.removeEventListener('popstate', handleNavigation);
+  }, []);
+
+  const updateQueryParam = (songId) => {
+    const newUrl = songId 
+      ? `${window.location.pathname}?song=${songId}`
+      : window.location.pathname;
+    window.history.pushState({}, '', newUrl);
+  };
+
+  const handleSelectSong = (song) => {
+    setSelectedSong(song);
+    updateQueryParam(song.id);
+  };
+
+  const handleBack = () => {
+    setSelectedSong(null);
+    updateQueryParam(null);
+  };
+
   const checkPassword = () => {
     const password = prompt("Please enter the password:");
     if (password === "yazzyb") {
@@ -173,7 +237,7 @@ const App = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isAuthenticated) {
       checkPassword();
     }
@@ -189,26 +253,23 @@ const App = () => {
 
   const songs = [
     { id: 1, title: 'Song 1', videoUrl: `${baseUrl}/videos/song1.mp4` },
-    { id: 2, title: 'Song 2', videoUrl: `${baseUrl}/videos/song2.mp4` },
+    { id: 2, title: 'Jogi', videoUrl: `${baseUrl}/videos/song2.mp4` },
     { id: 3, title: 'Kini Kini', videoUrl: `${baseUrl}/videos/song3.mp4` },
     { id: 4, title: 'Kabhi Aar Kabhi paar', videoUrl: `${baseUrl}/videos/song4.mp4` },
     { id: 5, title: 'Gudi Nal ishq mita', videoUrl: `${baseUrl}/videos/song5.mp4` }
   ];
-
-  console.log("Environment:", process.env.NODE_ENV);
-  console.log("Base URL:", baseUrl);
 
   return (
     <div style={styles.wrapper}>
       {selectedSong ? (
         <VideoPage 
           {...selectedSong} 
-          onBack={() => setSelectedSong(null)}
+          onBack={handleBack}
         />
       ) : (
         <SongList 
           songs={songs} 
-          onSelectSong={setSelectedSong}
+          onSelectSong={handleSelectSong}
         />
       )}
     </div>
